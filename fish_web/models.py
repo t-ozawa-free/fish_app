@@ -10,8 +10,8 @@ class FishMaster(models.Model):
     display_name = models.CharField(max_length=50)
     # 冷凍魚かどうか（Trueの場合は旬スコアの算出対象から除外する）
     is_frozen = models.BooleanField()
-    # 旬の時期（例：「12月〜2月」など）
-    season = models.CharField(max_length=100, blank=True)
+    # 旬の月リスト（例：[12, 1, 2]など）
+    season = models.JSONField(default=list, blank=True, verbose_name='旬の月リスト')
     # 味の特徴の説明文
     taste = models.TextField(blank=True)
     # おすすめの調理方法
