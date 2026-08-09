@@ -54,9 +54,9 @@
     "nutrition": "タンパク質が豊富。DHAやEPAを含む。",
     "alternatives": ["いなだ", "ぶり"],
     "recipe_url": {
-      "クックパッド": "https://cookpad.com/search/ぶり",
-      "クラシル": "https://www.kurashiru.com/search?query=ぶり",
-      "楽天レシピ": "https://recipe.rakuten.co.jp/search/ぶり/"
+      "クックパッド": "https://cookpad.com/search/わらさ",
+      "クラシル": "https://www.kurashiru.com/search?query=わらさ",
+      "楽天レシピ": "https://recipe.rakuten.co.jp/search/わらさ/"
     }
   },
   {
@@ -429,9 +429,9 @@
     "nutrition": "タンパク質が豊富。DHAやEPAを含む。",
     "alternatives": ["わらさ", "はまち（養殖）"],
     "recipe_url": {
-      "クックパッド": "https://cookpad.com/search/ぶり",
-      "クラシル": "https://www.kurashiru.com/search?query=ぶり",
-      "楽天レシピ": "https://recipe.rakuten.co.jp/search/ぶり/"
+      "クックパッド": "https://cookpad.com/search/いなだ",
+      "クラシル": "https://www.kurashiru.com/search?query=いなだ",
+      "楽天レシピ": "https://recipe.rakuten.co.jp/search/いなだ/"
     }
   },
   {
