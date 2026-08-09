@@ -1,0 +1,662 @@
+[
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 1,
+    "fields": {
+      "name": "冷ぎんさけ",
+      "display_name": "サーモン（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "脂がのって旨みが強く、クセの少ない味わい。解凍して使用する。",
+      "cooking_method": "刺身・塩焼き・ムニエル",
+      "nutrition": "良質なタンパク質が豊富。アスタキサンチンやDHA・EPAを含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/サーモン クラシル:https://www.kurashiru.com/search?query=サーモン 楽天レシピ:https://recipe.rakuten.co.jp/search/サーモン/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        14,
+        32
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 2,
+    "fields": {
+      "name": "冷めばち",
+      "display_name": "メバチマグロ（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "赤身は淡白でさっぱりとした味わい。解凍して使用する。",
+      "cooking_method": "刺身・漬け・カルパッチョ",
+      "nutrition": "高タンパク低脂質。鉄分やビタミンB12が豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/メバチマグロ クラシル:https://www.kurashiru.com/search?query=メバチマグロ 楽天レシピ:https://recipe.rakuten.co.jp/search/メバチマグロ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        17,
+        33
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 3,
+    "fields": {
+      "name": "まあじ",
+      "display_name": "アジ",
+      "is_frozen": false,
+      "season": "5月〜8月",
+      "taste": "淡白で上品な旨みがあり、脂のバランスが良い。",
+      "cooking_method": "刺身・塩焼き・フライ",
+      "nutrition": "タンパク質が豊富。DHAやEPAを多く含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/アジ クラシル:https://www.kurashiru.com/search?query=アジ 楽天レシピ:https://recipe.rakuten.co.jp/search/アジ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        10,
+        9
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 4,
+    "fields": {
+      "name": "わらさ",
+      "display_name": "ワラサ（ブリの若魚）",
+      "is_frozen": false,
+      "season": "4月〜10月",
+      "taste": "ブリより脂が少なく、さっぱりとした味わい。",
+      "cooking_method": "刺身・照り焼き・ぶり大根",
+      "nutrition": "タンパク質が豊富。DHAやEPAを含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/ぶり クラシル:https://www.kurashiru.com/search?query=ぶり 楽天レシピ:https://recipe.rakuten.co.jp/search/ぶり/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        29,
+        6
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 5,
+    "fields": {
+      "name": "まぐろ（国内）",
+      "display_name": "マグロ（国産）",
+      "is_frozen": false,
+      "season": "5月〜6月",
+      "taste": "赤身は上品な旨み、トロ部分は濃厚な脂の甘み。",
+      "cooking_method": "刺身・寿司・漬け",
+      "nutrition": "高タンパク低脂質。鉄分やDHA・EPAが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/マグロ クラシル:https://www.kurashiru.com/search?query=マグロ 楽天レシピ:https://recipe.rakuten.co.jp/search/マグロ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        12,
+        33
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 6,
+    "fields": {
+      "name": "ぶり",
+      "display_name": "ブリ",
+      "is_frozen": false,
+      "season": "11月〜2月",
+      "taste": "脂がのって旨みが強い。さっぱりとした後味。",
+      "cooking_method": "刺身・照り焼き・ぶり大根",
+      "nutrition": "タンパク質が豊富。DHAやEPAを多く含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/ぶり クラシル:https://www.kurashiru.com/search?query=ぶり 楽天レシピ:https://recipe.rakuten.co.jp/search/ぶり/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        4,
+        13
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 7,
+    "fields": {
+      "name": "かつお",
+      "display_name": "カツオ",
+      "is_frozen": false,
+      "season": "4月〜6月、8月〜10月",
+      "taste": "さっぱりとした赤身で、たたきにすると香ばしさが加わる。",
+      "cooking_method": "たたき・刺身・角煮",
+      "nutrition": "高タンパク低脂質。鉄分やビタミンB12が豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/カツオ クラシル:https://www.kurashiru.com/search?query=カツオ 楽天レシピ:https://recipe.rakuten.co.jp/search/カツオ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        5,
+        4
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 8,
+    "fields": {
+      "name": "活またい",
+      "display_name": "マダイ（活〆）",
+      "is_frozen": false,
+      "season": "3月〜6月",
+      "taste": "上品な白身で、淡白ながら旨みが強い。",
+      "cooking_method": "刺身・塩焼き・鯛めし",
+      "nutrition": "高タンパク低脂質。ビタミンB1やカリウムが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/鯛 クラシル:https://www.kurashiru.com/search?query=鯛 楽天レシピ:https://recipe.rakuten.co.jp/search/鯛/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        11,
+        24
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 9,
+    "fields": {
+      "name": "さば",
+      "display_name": "サバ",
+      "is_frozen": false,
+      "season": "9月〜12月",
+      "taste": "脂がのって濃厚な旨みがある。青魚特有の風味。",
+      "cooking_method": "塩焼き・味噌煮・しめさば",
+      "nutrition": "DHAやEPAが豊富。タンパク質やビタミンB群も多い。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/サバ クラシル:https://www.kurashiru.com/search?query=サバ 楽天レシピ:https://recipe.rakuten.co.jp/search/サバ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        10,
+        3
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 10,
+    "fields": {
+      "name": "まいわし",
+      "display_name": "イワシ",
+      "is_frozen": false,
+      "season": "2月〜5月",
+      "taste": "脂がのって濃厚な旨み。小骨が多いが柔らかい。",
+      "cooking_method": "刺身・つみれ汁・梅煮",
+      "nutrition": "DHAやEPAが豊富。カルシウムも多く含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/イワシ クラシル:https://www.kurashiru.com/search?query=イワシ 楽天レシピ:https://recipe.rakuten.co.jp/search/イワシ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        9,
+        3
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 11,
+    "fields": {
+      "name": "またい（養殖）",
+      "display_name": "マダイ（養殖）",
+      "is_frozen": false,
+      "season": "3月〜6月",
+      "taste": "脂のりが良く、まろやかな味わい。",
+      "cooking_method": "刺身・塩焼き・鯛めし",
+      "nutrition": "高タンパク低脂質。ビタミンB1やカリウムが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/鯛 クラシル:https://www.kurashiru.com/search?query=鯛 楽天レシピ:https://recipe.rakuten.co.jp/search/鯛/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        8,
+        24
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 12,
+    "fields": {
+      "name": "冷ほんまぐろ",
+      "display_name": "本マグロ（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "濃厚な脂の旨みが特徴。解凍して使用する。",
+      "cooking_method": "刺身・寿司・漬け",
+      "nutrition": "高タンパク低脂質。鉄分やDHA・EPAが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/本マグロ クラシル:https://www.kurashiru.com/search?query=本マグロ 楽天レシピ:https://recipe.rakuten.co.jp/search/本マグロ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        5,
+        33
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 13,
+    "fields": {
+      "name": "はまち（養殖）",
+      "display_name": "ハマチ（養殖）",
+      "is_frozen": false,
+      "season": "3月〜6月",
+      "taste": "脂がのってまろやかな旨み。クセが少なく食べやすい。",
+      "cooking_method": "刺身・照り焼き・ぶり大根",
+      "nutrition": "タンパク質が豊富。DHAやEPAを多く含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/ハマチ クラシル:https://www.kurashiru.com/search?query=ハマチ 楽天レシピ:https://recipe.rakuten.co.jp/search/ハマチ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        29,
+        4
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 14,
+    "fields": {
+      "name": "輸入さけ・ます",
+      "display_name": "サーモン・マス（輸入）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "脂がのって旨みが強く、クセの少ない味わい。",
+      "cooking_method": "刺身・ムニエル・塩焼き",
+      "nutrition": "良質なタンパク質が豊富。アスタキサンチンやDHA・EPAを含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/サーモン クラシル:https://www.kurashiru.com/search?query=サーモン 楽天レシピ:https://recipe.rakuten.co.jp/search/サーモン/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        1,
+        32
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 15,
+    "fields": {
+      "name": "さんま",
+      "display_name": "サンマ",
+      "is_frozen": false,
+      "season": "9月〜11月",
+      "taste": "脂がのって濃厚な旨み。ほろ苦い内臓も人気。",
+      "cooking_method": "塩焼き・蒲焼き・刺身",
+      "nutrition": "DHAやEPAが豊富。ビタミンDも多く含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/サンマ クラシル:https://www.kurashiru.com/search?query=サンマ 楽天レシピ:https://recipe.rakuten.co.jp/search/サンマ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        10,
+        9
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 16,
+    "fields": {
+      "name": "冷ぎんたら",
+      "display_name": "ギンダラ（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "脂が非常に多く、とろけるような食感。解凍して使用する。",
+      "cooking_method": "西京焼き・煮付け・ムニエル",
+      "nutrition": "高タンパク。DHAやEPA、ビタミンDが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/銀だら クラシル:https://www.kurashiru.com/search?query=銀だら 楽天レシピ:https://recipe.rakuten.co.jp/search/銀だら/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        19,
+        30
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 17,
+    "fields": {
+      "name": "冷印度まぐろ",
+      "display_name": "インドマグロ（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "赤身は濃厚な旨みがあり、脂ののりも良い。解凍して使用する。",
+      "cooking_method": "刺身・寿司・漬け",
+      "nutrition": "高タンパク低脂質。鉄分やDHA・EPAが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/インドマグロ クラシル:https://www.kurashiru.com/search?query=インドマグロ 楽天レシピ:https://recipe.rakuten.co.jp/search/インドマグロ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        2,
+        33
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 18,
+    "fields": {
+      "name": "冷ほたて貝",
+      "display_name": "ホタテ貝（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "貝柱は甘みが強くプリプリとした食感。解凍して使用する。",
+      "cooking_method": "刺身・バター焼き・フライ",
+      "nutrition": "高タンパク低脂質。タウリンや亜鉛が豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/ホタテ クラシル:https://www.kurashiru.com/search?query=ホタテ 楽天レシピ:https://recipe.rakuten.co.jp/search/ホタテ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        28,
+        20
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 19,
+    "fields": {
+      "name": "生またら",
+      "display_name": "タラ（鮮魚）",
+      "is_frozen": false,
+      "season": "11月〜3月",
+      "taste": "淡白な白身で、加熱するとふっくらとした食感になる。",
+      "cooking_method": "鍋・煮付け・ムニエル",
+      "nutrition": "高タンパク低脂質。ビタミンB12やカリウムが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/タラ クラシル:https://www.kurashiru.com/search?query=タラ 楽天レシピ:https://recipe.rakuten.co.jp/search/タラ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        16,
+        26
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 20,
+    "fields": {
+      "name": "冷たこ",
+      "display_name": "タコ（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "コリコリとした食感と淡白ながら旨みのある味わい。解凍して使用する。",
+      "cooking_method": "刺身・タコ焼き・酢の物",
+      "nutrition": "高タンパク低脂質。タウリンが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/タコ クラシル:https://www.kurashiru.com/search?query=タコ 楽天レシピ:https://recipe.rakuten.co.jp/search/タコ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        18,
+        28
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 21,
+    "fields": {
+      "name": "その他冷輸入えび",
+      "display_name": "エビ（輸入・冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "プリプリとした食感で淡白な旨み。解凍して使用する。",
+      "cooking_method": "フライ・天ぷら・エビチリ",
+      "nutrition": "高タンパク低脂質。タウリンやビタミンEが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/エビ クラシル:https://www.kurashiru.com/search?query=エビ 楽天レシピ:https://recipe.rakuten.co.jp/search/エビ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        27,
+        31
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 22,
+    "fields": {
+      "name": "冷さば",
+      "display_name": "サバ（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "脂がのって濃厚な旨み。解凍して使用する。",
+      "cooking_method": "塩焼き・味噌煮・竜田揚げ",
+      "nutrition": "DHAやEPAが豊富。タンパク質やビタミンB群も多い。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/サバ クラシル:https://www.kurashiru.com/search?query=サバ 楽天レシピ:https://recipe.rakuten.co.jp/search/サバ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        9,
+        10
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 23,
+    "fields": {
+      "name": "かき",
+      "display_name": "牡蠣",
+      "is_frozen": false,
+      "season": "6月〜12月",
+      "taste": "濃厚な旨みとミルキーな風味。「海のミルク」とも呼ばれる。",
+      "cooking_method": "生食・フライ・鍋",
+      "nutrition": "亜鉛が非常に豊富。タウリンやビタミンB12も多い。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/牡蠣 クラシル:https://www.kurashiru.com/search?query=牡蠣 楽天レシピ:https://recipe.rakuten.co.jp/search/牡蠣/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        31,
+        18
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 24,
+    "fields": {
+      "name": "またい（天然）",
+      "display_name": "マダイ（天然）",
+      "is_frozen": false,
+      "season": "3月〜6月",
+      "taste": "引き締まった身で上品な旨み。桜鯛と呼ばれる旬の味わい。",
+      "cooking_method": "刺身・塩焼き・鯛めし",
+      "nutrition": "高タンパク低脂質。ビタミンB1やカリウムが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/鯛 クラシル:https://www.kurashiru.com/search?query=鯛 楽天レシピ:https://recipe.rakuten.co.jp/search/鯛/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        8,
+        11
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 25,
+    "fields": {
+      "name": "活かんぱち",
+      "display_name": "カンパチ（活〆）",
+      "is_frozen": false,
+      "season": "7月〜9月",
+      "taste": "歯ごたえがありながら淡白で上品な旨み。",
+      "cooking_method": "刺身・カルパッチョ・塩焼き",
+      "nutrition": "高タンパク低脂質。ビタミンB群やカリウムが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/カンパチ クラシル:https://www.kurashiru.com/search?query=カンパチ 楽天レシピ:https://recipe.rakuten.co.jp/search/カンパチ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        8,
+        26
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 26,
+    "fields": {
+      "name": "きんめたい",
+      "display_name": "キンメダイ",
+      "is_frozen": false,
+      "season": "11月〜2月",
+      "taste": "脂がのって濃厚な旨み。皮目のゼラチン質も美味。",
+      "cooking_method": "煮付け・塩焼き・しゃぶしゃぶ",
+      "nutrition": "DHAやEPAが豊富。ビタミンB群も多く含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/キンメダイ クラシル:https://www.kurashiru.com/search?query=キンメダイ 楽天レシピ:https://recipe.rakuten.co.jp/search/キンメダイ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        19,
+        16
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 27,
+    "fields": {
+      "name": "冷むきえび",
+      "display_name": "むきエビ（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "下処理済みで使いやすく、プリプリとした食感。解凍して使用する。",
+      "cooking_method": "炒め物・フライ・パスタ",
+      "nutrition": "高タンパク低脂質。タウリンやビタミンEが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/エビ クラシル:https://www.kurashiru.com/search?query=エビ 楽天レシピ:https://recipe.rakuten.co.jp/search/エビ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        21,
+        31
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 28,
+    "fields": {
+      "name": "するめいか",
+      "display_name": "スルメイカ",
+      "is_frozen": false,
+      "season": "6月〜10月",
+      "taste": "コリコリとした食感と、噛むほどに広がる甘み。",
+      "cooking_method": "刺身・煮物・天ぷら",
+      "nutrition": "高タンパク低脂質。タウリンが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/イカ クラシル:https://www.kurashiru.com/search?query=イカ 楽天レシピ:https://recipe.rakuten.co.jp/search/イカ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        20,
+        18
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 29,
+    "fields": {
+      "name": "いなだ",
+      "display_name": "イナダ（ブリの若魚）",
+      "is_frozen": false,
+      "season": "4月〜10月",
+      "taste": "ブリより脂が少なく、さっぱりとした味わい。",
+      "cooking_method": "刺身・照り焼き・カルパッチョ",
+      "nutrition": "タンパク質が豊富。DHAやEPAを含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/ぶり クラシル:https://www.kurashiru.com/search?query=ぶり 楽天レシピ:https://recipe.rakuten.co.jp/search/ぶり/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        4,
+        13
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 30,
+    "fields": {
+      "name": "冷からすかれい",
+      "display_name": "カラスガレイ（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "脂が非常に多く、濃厚でとろけるような味わい。解凍して使用する。",
+      "cooking_method": "煮付け・塩焼き・ムニエル",
+      "nutrition": "高タンパク。DHAやEPA、ビタミンDが豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/カラスガレイ クラシル:https://www.kurashiru.com/search?query=カラスガレイ 楽天レシピ:https://recipe.rakuten.co.jp/search/カラスガレイ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        16,
+        26
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 31,
+    "fields": {
+      "name": "むきかき",
+      "display_name": "むき牡蠣",
+      "is_frozen": false,
+      "season": "10月〜3月",
+      "taste": "濃厚な旨みとミルキーな風味。殻剥き済みで使いやすい。",
+      "cooking_method": "フライ・鍋・グラタン",
+      "nutrition": "亜鉛が非常に豊富。タウリンやビタミンB12も多い。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/牡蠣 クラシル:https://www.kurashiru.com/search?query=牡蠣 楽天レシピ:https://recipe.rakuten.co.jp/search/牡蠣/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        23,
+        27
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 32,
+    "fields": {
+      "name": "その他冷さけ",
+      "display_name": "サケ（その他・冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "クセが少なく淡白な味わい。解凍して使用する。",
+      "cooking_method": "塩焼き・フライ・ムニエル",
+      "nutrition": "良質なタンパク質が豊富。DHAやEPAを含む。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/サケ クラシル:https://www.kurashiru.com/search?query=サケ 楽天レシピ:https://recipe.rakuten.co.jp/search/サケ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        1,
+        14
+      ]
+    }
+  },
+  {
+    "model": "fish_web.fishmaster",
+    "pk": 33,
+    "fields": {
+      "name": "冷きわだ",
+      "display_name": "キハダマグロ（冷凍）",
+      "is_frozen": true,
+      "season": "",
+      "taste": "赤身はさっぱりとした味わいで脂は少なめ。解凍して使用する。",
+      "cooking_method": "刺身・カルパッチョ・ソテー",
+      "nutrition": "高タンパク低脂質。鉄分やビタミンB12が豊富。",
+      "recipe_url": "クックパッド:https://cookpad.com/search/キハダマグロ クラシル:https://www.kurashiru.com/search?query=キハダマグロ 楽天レシピ:https://recipe.rakuten.co.jp/search/キハダマグロ/",
+      "price_category": "",
+      "z_score": null,
+      "alternatives": [
+        2,
+        17
+      ]
+    }
+  }
+]
