@@ -197,8 +197,8 @@
   {
     "name": "輸入さけ・ます",
     "display_name": "サーモン・マス（輸入）",
-    "is_frozen": false,
-    "season_months": [11, 12, 1, 2],
+    "is_frozen": true,
+    "season_months": [],
     "taste": "脂がのって旨みが強く、クセの少ない味わい。",
     "cooking_method": "刺身・ムニエル・塩焼き",
     "nutrition": "良質なタンパク質が豊富。アスタキサンチンやDHA・EPAを含む。",
