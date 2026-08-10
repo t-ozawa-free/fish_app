@@ -69,6 +69,9 @@ class RecommendScore(models.Model):
     fish_name = models.CharField(max_length=50)
     year = models.IntegerField()
     month = models.IntegerField()
+    # 予測（来月）分の判定行にのみ設定する対象年月。今月分の実績ベース行はNoneのまま
+    target_year = models.IntegerField(null=True, blank=True)
+    target_month = models.IntegerField(null=True, blank=True)
     # 総合おすすめスコア
     total_score = models.FloatField()
     # 価格の安定度スコア

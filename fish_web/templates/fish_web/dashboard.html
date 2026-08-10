@@ -3,5 +3,34 @@
 {% block title %}ダッシュボード｜魚おすすめアプリ{% endblock %}
 
 {% block content %}
-    <h1>ダッシュボード</h1>
+    <h1 class="mb-4">ダッシュボード</h1>
+
+    <!-- 免責事項：本アプリの情報が参考情報であることを明示する -->
+    <div class="alert alert-warning" role="alert">
+        本アプリの情報は市場取引データ・一般的な旬・公開情報を基にした参考情報です。<br>
+        実際の店頭価格・在庫・品質・食味を保証するものではありません。<br>
+        価格は機械学習による予測値です。
+    </div>
+
+    <!-- 今月セクション -->
+    <section class="mb-5">
+        <h2 class="mb-3">{{ this_year }}年{{ this_month }}月のおすすめ</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% include "fish_web/_category_card.html" with label="旬だから食べよう 🌿" fish_list=this_season %}
+            {% include "fish_web/_category_card.html" with label="コスパ最強 💰" fish_list=this_cheap %}
+            {% include "fish_web/_category_card.html" with label="今だけお得 🎯" fish_list=this_deal %}
+            {% include "fish_web/_category_card.html" with label="値上がり注意 ⚠️" fish_list=this_caution %}
+        </div>
+    </section>
+
+    <!-- 来月セクション -->
+    <section class="mb-5">
+        <h2 class="mb-3">{{ next_year }}年{{ next_month }}月のおすすめ</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            {% include "fish_web/_category_card.html" with label="旬だから食べよう 🌿" fish_list=next_season %}
+            {% include "fish_web/_category_card.html" with label="コスパ最強 💰" fish_list=next_cheap %}
+            {% include "fish_web/_category_card.html" with label="今だけお得 🎯" fish_list=next_deal %}
+            {% include "fish_web/_category_card.html" with label="値上がり注意 ⚠️" fish_list=next_caution %}
+        </div>
+    </section>
 {% endblock %}

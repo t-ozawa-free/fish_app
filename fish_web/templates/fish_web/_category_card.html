@@ -1,0 +1,32 @@
+{% comment %}1カテゴリ分のカードを描画する共通部品。label（カテゴリラベル）とfish_list（魚種辞書のリスト）を受け取る{% endcomment %}
+<div class="col">
+    <div class="card h-100">
+        <div class="card-header fw-bold">{{ label }}</div>
+        <div class="card-body">
+            {% if fish_list %}
+                {% for fish in fish_list %}
+                    <div class="border rounded p-2 mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">{{ fish.display_name }}</span>
+                            <span>
+                                {% if fish.price is not None %}
+                                    {{ fish.price|floatformat:0 }}円/kg
+                                {% else %}
+                                    データなし
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="mt-1">
+                            {% if fish.is_season %}<span class="badge bg-success">旬</span>{% endif %}
+                            {% if fish.is_cheap %}<span class="badge bg-primary">安め</span>{% endif %}
+                            {% if fish.is_deal %}<span class="badge bg-warning text-dark">お得</span>{% endif %}
+                            {% if fish.is_caution %}<span class="badge bg-danger">注意</span>{% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted mb-0">データなし</p>
+            {% endif %}
+        </div>
+    </div>
+</div>

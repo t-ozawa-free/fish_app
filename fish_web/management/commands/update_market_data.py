@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from fish_web.models import FishMaster, ForecastResult, MonthlyStats, RecommendScore
+from fish_web.utils import get_next_month
 
 # コスパ最強・今だけお得・値上がり注意で表示する上位件数
 TOP_N = 4
@@ -117,7 +118,63 @@ class Command(BaseCommand):
 
         today = date.today()
         this_year, this_month = today.year, today.month
+        next_year, next_month = get_next_month(this_year, this_month)
 
+        # 今月分：実績データに基づく判定
+        shun_list, kospa_list, otoku_list, chuui_list = self._evaluate_categories(
+            this_year, this_month, overall_stats, cross_zscores, trends, time_zscores
+        )
+        # 来月分：来月の取扱数量は実績が無いため予測データ（ForecastResult）に基づく判定になる
+        n_shun_list, n_kospa_list, n_otoku_list, n_chuui_list = self._evaluate_categories(
+            next_year, next_month, overall_stats, cross_zscores, trends, time_zscores
+        )
+
+        objects = (
+            [self._build_recommend_score(name, this_year, this_month, '旬') for name in shun_list]
+            + [self._build_recommend_score(name, this_year, this_month, 'コスパ') for name in kospa_list]
+            + [self._build_recommend_score(name, this_year, this_month, 'お得') for name in otoku_list]
+            + [self._build_recommend_score(name, this_year, this_month, '注意') for name in chuui_list]
+            + [
+                self._build_recommend_score(
+                    name, next_year, next_month, '旬', target_year=next_year, target_month=next_month
+                )
+                for name in n_shun_list
+            ]
+            + [
+                self._build_recommend_score(
+                    name, next_year, next_month, 'コスパ', target_year=next_year, target_month=next_month
+                )
+                for name in n_kospa_list
+            ]
+            + [
+                self._build_recommend_score(
+                    name, next_year, next_month, 'お得', target_year=next_year, target_month=next_month
+                )
+                for name in n_otoku_list
+            ]
+            + [
+                self._build_recommend_score(
+                    name, next_year, next_month, '注意', target_year=next_year, target_month=next_month
+                )
+                for name in n_chuui_list
+            ]
+        )
+
+        # 既存データを全削除してから登録し直す
+        RecommendScore.objects.all().delete()
+        RecommendScore.objects.bulk_create(objects)
+
+        self.stdout.write(
+            'Step3: RecommendScoreの登録が完了しました'
+            f'（今月 旬:{len(shun_list)}件 コスパ:{len(kospa_list)}件 '
+            f'お得:{len(otoku_list)}件 注意:{len(chuui_list)}件／'
+            f'来月 旬:{len(n_shun_list)}件 コスパ:{len(n_kospa_list)}件 '
+            f'お得:{len(n_otoku_list)}件 注意:{len(n_chuui_list)}件 '
+            f'合計:{len(objects)}件）'
+        )
+
+    def _evaluate_categories(self, target_year, target_month, overall_stats, cross_zscores, trends, time_zscores):
+        """指定した対象年月について旬・コスパ・お得・注意の魚種名リストを判定して返す"""
         shun_list = []
         kospa_candidates = []
         otoku_candidates = []
@@ -125,7 +182,7 @@ class Command(BaseCommand):
 
         for fish in FishMaster.objects.all():
             name = fish.name
-            volume = self._resolve_current_volume(name, this_year, this_month)
+            volume = self._resolve_current_volume(name, target_year, target_month)
             avg_volume = overall_stats.get(name)
             cross_zscore = cross_zscores.get(name)
             time_zscore = time_zscores.get(name)
@@ -145,7 +202,7 @@ class Command(BaseCommand):
             if (
                 volume is not None
                 and avg_volume is not None
-                and this_month in fish.season
+                and target_month in fish.season
                 and not fish.is_frozen
                 and volume >= avg_volume * 0.5
             ):
@@ -186,22 +243,7 @@ class Command(BaseCommand):
             name for name, _ in sorted(chuui_candidates, key=lambda x: x[1], reverse=True)[:TOP_N]
         ]
 
-        objects = (
-            [self._build_recommend_score(name, this_year, this_month, '旬') for name in shun_list]
-            + [self._build_recommend_score(name, this_year, this_month, 'コスパ') for name in kospa_list]
-            + [self._build_recommend_score(name, this_year, this_month, 'お得') for name in otoku_list]
-            + [self._build_recommend_score(name, this_year, this_month, '注意') for name in chuui_list]
-        )
-
-        # 既存データを全削除してから登録し直す
-        RecommendScore.objects.all().delete()
-        RecommendScore.objects.bulk_create(objects)
-
-        self.stdout.write(
-            'Step3: RecommendScoreの登録が完了しました'
-            f'（旬:{len(shun_list)}件 コスパ:{len(kospa_list)}件 '
-            f'お得:{len(otoku_list)}件 注意:{len(chuui_list)}件 合計:{len(objects)}件）'
-        )
+        return shun_list, kospa_list, otoku_list, chuui_list
 
     def _resolve_current_volume(self, fish_name, year, month):
         """今月の取扱数量を取得する。実績データが無い場合は予測データで代用する"""
@@ -218,12 +260,14 @@ class Command(BaseCommand):
         self.stderr.write(f'Step3: {fish_name}の{year}年{month}月の取扱数量データが見つかりません')
         return None
 
-    def _build_recommend_score(self, fish_name, year, month, category):
+    def _build_recommend_score(self, fish_name, year, month, category, target_year=None, target_month=None):
         """RecommendScoreを生成する。数値スコアの算出方法は未定義のため0.0で登録する"""
         return RecommendScore(
             fish_name=fish_name,
             year=year,
             month=month,
+            target_year=target_year,
+            target_month=target_month,
             total_score=0.0,
             price_stability=0.0,
             price_risk=0.0,
