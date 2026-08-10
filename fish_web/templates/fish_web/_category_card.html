@@ -10,7 +10,7 @@
                             <span class="fw-bold">{{ fish.display_name }}</span>
                             <span>
                                 {% if fish.price is not None %}
-                                    {{ fish.price|floatformat:0 }}円/kg（約{{ fish.price_per_100g }}円/100g）
+                                    {{ fish.price|floatformat:0 }}円/kg
                                 {% else %}
                                     データなし
                                 {% endif %}

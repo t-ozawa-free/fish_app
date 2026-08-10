@@ -98,15 +98,12 @@ class DashboardView(TemplateView):
             name = score.fish_name
             fish = fish_master_map.get(name)
             categories = membership.get(name, set())
-            price = price_map.get(name)
             items.append(
                 {
                     "fish_name": name,
                     "display_name": fish.display_name if fish else name,
                     "is_frozen": fish.is_frozen if fish else False,
-                    "price": price,
-                    # 100gあたりの目安価格（円/kgを10で割って切り捨て）
-                    "price_per_100g": int(price // 10) if price is not None else None,
+                    "price": price_map.get(name),
                     "is_season": "旬" in categories,
                     "is_cheap": "コスパ" in categories,
                     "is_deal": "お得" in categories,
