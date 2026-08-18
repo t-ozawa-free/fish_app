@@ -1,7 +1,104 @@
 {% extends "fish_web/base.html" %}
 
-{% block title %}魚種詳細｜魚おすすめアプリ{% endblock %}
+{% block title %}{{ fish.display_name }}｜魚おすすめアプリ{% endblock %}
 
 {% block content %}
-    <h1>魚種詳細：{{ name }}</h1>
+    <a href="{% url 'fish_web:fish_list' %}" class="d-inline-block mb-3">&laquo; 魚種一覧に戻る</a>
+
+    <div class="d-flex align-items-center flex-wrap mb-2">
+        <h1 class="me-3 mb-0">{{ fish.display_name }}</h1>
+        {% if fish.is_frozen %}<span class="badge bg-secondary me-1">冷凍</span>{% endif %}
+        {% if is_season %}<span class="badge bg-success me-1">旬</span>{% endif %}
+        {% if is_cheap %}<span class="badge bg-primary me-1">安め</span>{% endif %}
+        {% if is_deal %}<span class="badge bg-warning text-dark me-1">お得</span>{% endif %}
+        {% if is_caution %}<span class="badge bg-danger me-1">注意</span>{% endif %}
+    </div>
+
+    <p class="fs-5 mb-4">
+        今月の価格：
+        {% if current_price is not None %}{{ current_price|floatformat:0 }}円/kg{% else %}データなし{% endif %}
+    </p>
+
+    <!-- 基本情報／栄養成分 -->
+    <div class="row row-cols-1 row-cols-md-2 g-4 mb-4">
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">基本情報</h5>
+                    <p class="card-text">
+                        <strong>旬：</strong>
+                        {% if fish.season %}
+                            {% for m in fish.season %}{{ m }}月{% if not forloop.last %}・{% endif %}{% endfor %}
+                        {% else %}情報なし{% endif %}
+                    </p>
+                    <p class="card-text"><strong>味：</strong>{{ fish.taste|default:"情報なし" }}</p>
+                    <p class="card-text"><strong>調理法：</strong>{{ fish.cooking_method|default:"情報なし" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">栄養成分</h5>
+                    <p class="card-text">{{ fish.nutrition|default:"情報なし"|linebreaksbr }}</p>
+                    <p class="card-text text-muted small mb-0">出典：文部科学省 食品成分データベース</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 実績・予測グラフ -->
+    <div class="row row-cols-1 row-cols-md-2 g-4 mb-4">
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">月別平均単価推移</h5>
+                    {% if price_chart %}
+                        <img src="data:image/png;base64,{{ price_chart }}" class="img-fluid" alt="月別平均単価推移グラフ">
+                    {% else %}
+                        <p class="text-muted">データなし</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">月別取扱数量推移</h5>
+                    {% if volume_chart %}
+                        <img src="data:image/png;base64,{{ volume_chart }}" class="img-fluid" alt="月別取扱数量推移グラフ">
+                    {% else %}
+                        <p class="text-muted">データなし</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 代替魚 -->
+    <section class="mb-4">
+        <h5>代替魚</h5>
+        {% if alternatives %}
+            {% for alt in alternatives %}
+                <a href="{% url 'fish_web:fish_detail' name=alt.name %}"
+                   class="badge bg-light text-dark text-decoration-none border me-1 mb-1">{{ alt.display_name }}</a>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">情報なし</p>
+        {% endif %}
+    </section>
+
+    <!-- 外部レシピリンク -->
+    <section class="mb-4">
+        <h5>レシピを探す</h5>
+        {% if recipe_urls %}
+            <ul class="list-unstyled">
+                {% for site_name, url in recipe_urls.items %}
+                    <li><a href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ site_name }} ↗</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">情報なし</p>
+        {% endif %}
+    </section>
 {% endblock %}

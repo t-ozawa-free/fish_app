@@ -1,11 +1,26 @@
+import base64
+import io
+import platform
 from collections import defaultdict
 from datetime import date
 
+import matplotlib
+matplotlib.use("Agg")  # サーバー環境でGUI無しにPNGを生成するためのバックエンド指定
+import matplotlib.pyplot as plt
+
 from django.http import QueryDict
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from .models import FishMaster, ForecastResult, MonthlyStats, RecommendScore
 from .utils import get_next_month
+
+# グラフの日本語表示用フォント設定（Windows開発環境とそれ以外の本番環境を切り替える）
+# ※ Linux本番環境にIPAexGothicが未インストールの場合はDejaVu Sansにフォールバックし文字化けし得る
+if platform.system() == "Windows":
+    plt.rcParams["font.family"] = "MS Gothic"
+else:
+    plt.rcParams["font.family"] = "IPAexGothic"
 
 
 def _build_price_map(fish_names, year, month, use_monthly_stats):
@@ -32,6 +47,27 @@ def _collect_categories(scores):
     for score in scores:
         membership[score.fish_name].add(score.category)
     return membership
+
+
+def _category_flags(categories):
+    """カテゴリ集合からis_season/is_cheap/is_deal/is_cautionのフラグ辞書を作る"""
+    return {
+        "is_season": "旬" in categories,
+        "is_cheap": "コスパ" in categories,
+        "is_deal": "お得" in categories,
+        "is_caution": "注意" in categories,
+    }
+
+
+def _parse_recipe_urls(recipe_url):
+    """recipe_url文字列（"サイト名:URL"がスペース区切りで連結）をdictに変換する"""
+    urls = {}
+    for token in recipe_url.split():
+        if ":" not in token:
+            continue
+        site_name, url = token.split(":", 1)  # URL内の":"で誤分割しないようmaxsplit=1
+        urls[site_name] = url
+    return urls
 
 
 class DashboardView(TemplateView):
@@ -110,10 +146,7 @@ class DashboardView(TemplateView):
                     "display_name": fish.display_name if fish else name,
                     "is_frozen": fish.is_frozen if fish else False,
                     "price": price_map.get(name),
-                    "is_season": "旬" in categories,
-                    "is_cheap": "コスパ" in categories,
-                    "is_deal": "お得" in categories,
-                    "is_caution": "注意" in categories,
+                    **_category_flags(categories),
                 }
             )
         return items
@@ -188,10 +221,7 @@ class FishListView(TemplateView):
             "display_name": fish.display_name,
             "is_frozen": fish.is_frozen,
             "price": price_map.get(fish.name),
-            "is_season": "旬" in categories,
-            "is_cheap": "コスパ" in categories,
-            "is_deal": "お得" in categories,
-            "is_caution": "注意" in categories,
+            **_category_flags(categories),
         }
 
     def _apply_filters(self, fish_list, filters):
@@ -238,15 +268,120 @@ class FishListView(TemplateView):
 
 
 class FishDetailView(TemplateView):
-    """SCR003：魚種詳細画面。URLで指定された魚種名をテンプレートに渡す"""
+    """SCR003：魚種詳細画面。基本情報・栄養・実績予測グラフ・代替魚・レシピリンクを表示する"""
 
     template_name = "fish_web/fish_detail.html"
 
+    def get(self, request, *args, **kwargs):
+        # URLパラメータ<str:name>で指定された魚種が存在しない場合は404を返す
+        self.fish = get_object_or_404(FishMaster, name=kwargs.get("name"))
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # URLパラメータ<str:name>で指定された魚種名を画面に渡す
-        context["name"] = kwargs.get("name")
+        fish = self.fish
+
+        monthly_stats = list(
+            MonthlyStats.objects.filter(fish_name=fish.name).order_by("year", "month")
+        )
+        forecasts = list(
+            ForecastResult.objects.filter(fish_name=fish.name).order_by("target_year", "target_month")
+        )
+
+        today = date.today()
+        current_scores = RecommendScore.objects.filter(
+            fish_name=fish.name, year=today.year, month=today.month
+        )
+        categories = {score.category for score in current_scores}
+        current_price = _build_price_map(
+            {fish.name}, today.year, today.month, use_monthly_stats=True
+        ).get(fish.name)
+
+        timeline, actual_prices, forecast_prices, actual_volumes, forecast_volumes = self._build_timeline(
+            monthly_stats, forecasts
+        )
+
+        context.update(
+            {
+                "fish": fish,
+                "price_chart": self._render_chart(
+                    timeline, actual_prices, forecast_prices, "月別平均単価推移", "円/kg"
+                ),
+                "volume_chart": self._render_chart(
+                    timeline, actual_volumes, forecast_volumes, "月別取扱数量推移", "kg"
+                ),
+                "current_price": current_price,
+                "alternatives": fish.alternatives.all(),
+                "recipe_urls": _parse_recipe_urls(fish.recipe_url),
+                **_category_flags(categories),
+            }
+        )
         return context
+
+    def _build_timeline(self, monthly_stats, forecasts):
+        """実績（MonthlyStats）と予測（ForecastResult）の年月を結合し、
+        2023年1月から予測終了月までの連続した年月リストと各系列の値リストを作る"""
+        actual_price = {(s.year, s.month): s.price for s in monthly_stats}
+        actual_volume = {(s.year, s.month): s.volume for s in monthly_stats}
+        forecast_price = {(f.target_year, f.target_month): f.forecast_price for f in forecasts}
+        forecast_volume = {(f.target_year, f.target_month): f.forecast_volume for f in forecasts}
+
+        all_months = set(actual_price) | set(forecast_price)
+        if not all_months:
+            return [], [], [], [], []
+
+        end_year, end_month = max(all_months)
+        timeline = []
+        year, month = 2023, 1
+        while (year, month) <= (end_year, end_month):
+            timeline.append((year, month))
+            year, month = get_next_month(year, month)
+
+        actual_prices = [actual_price.get(ym) for ym in timeline]
+        forecast_prices = [forecast_price.get(ym) for ym in timeline]
+        actual_volumes = [actual_volume.get(ym) for ym in timeline]
+        forecast_volumes = [forecast_volume.get(ym) for ym in timeline]
+
+        # 実績の最終月の値を予測系列の同じ位置にも入れ、グラフの線が途切れずつながるようにする
+        for actual_values, forecast_values in (
+            (actual_prices, forecast_prices),
+            (actual_volumes, forecast_volumes),
+        ):
+            last_actual_index = next(
+                (i for i in range(len(actual_values) - 1, -1, -1) if actual_values[i] is not None),
+                None,
+            )
+            if last_actual_index is not None and forecast_values[last_actual_index] is None:
+                forecast_values[last_actual_index] = actual_values[last_actual_index]
+
+        return timeline, actual_prices, forecast_prices, actual_volumes, forecast_volumes
+
+    def _render_chart(self, timeline, actual_values, forecast_values, title, ylabel):
+        """実績（青実線）・予測（オレンジ点線）を重ねたグラフを描画し、Base64エンコードしたPNGを返す"""
+        if not timeline:
+            return None
+
+        x = range(len(timeline))
+        labels = [f"{year}/{month}" for year, month in timeline]
+        actual_y = [v if v is not None else float("nan") for v in actual_values]
+        forecast_y = [v if v is not None else float("nan") for v in forecast_values]
+
+        fig, ax = plt.subplots(figsize=(10, 4))
+        ax.plot(x, actual_y, color="tab:blue", linestyle="-", label="実績")
+        ax.plot(x, forecast_y, color="tab:orange", linestyle="--", label="予測")
+        ax.set_title(title)
+        ax.set_ylabel(ylabel)
+        # 年月ラベルが多い場合は間引いて表示する（重なりを防ぐ）
+        step = max(len(labels) // 12, 1)
+        ax.set_xticks(list(x)[::step])
+        ax.set_xticklabels(labels[::step], rotation=45, ha="right")
+        ax.legend(loc="upper left")
+        fig.tight_layout()
+
+        buffer = io.BytesIO()
+        fig.savefig(buffer, format="png")
+        plt.close(fig)  # メモリリーク防止のため必ずFigureを閉じる
+        return base64.b64encode(buffer.getvalue()).decode("ascii")
 
 
 class GraphView(TemplateView):
