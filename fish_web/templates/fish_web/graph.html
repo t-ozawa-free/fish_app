@@ -3,5 +3,98 @@
 {% block title %}グラフ｜魚おすすめアプリ{% endblock %}
 
 {% block content %}
-    <h1>グラフ</h1>
+    <h1 class="mb-4">グラフ</h1>
+
+    <!-- タブ切り替え：Bootstrap5のdata-bs-toggle="tab"のみで実現（JS不使用） -->
+    <ul class="nav nav-tabs mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="price-tab" data-bs-toggle="tab"
+                    data-bs-target="#price-pane" type="button" role="tab"
+                    aria-controls="price-pane" aria-selected="true">価格比較</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="calendar-tab" data-bs-toggle="tab"
+                    data-bs-target="#calendar-pane" type="button" role="tab"
+                    aria-controls="calendar-pane" aria-selected="false">旬・おすすめカレンダー</button>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <!-- タブ1：価格比較 -->
+        <div class="tab-pane fade show active" id="price-pane" role="tabpanel" aria-labelledby="price-tab">
+            <!-- 魚種・期間の絞り込みフォーム（GET送信、JS不使用） -->
+            <form method="get" class="row g-3 align-items-end mb-3">
+                <div class="col-auto">
+                    <label for="fish-select" class="form-label">魚種（複数選択可）</label>
+                    <select id="fish-select" name="fish" multiple size="8" class="form-select">
+                        {% for fish in all_fish %}
+                            <option value="{{ fish.name }}"
+                                {% if fish.name in selected_fish_names %}selected{% endif %}>
+                                {{ fish.display_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <div class="form-text">Ctrlキーを押しながらクリックで複数選択できます</div>
+                </div>
+                <div class="col-auto">
+                    <label for="period-select" class="form-label">期間</label>
+                    <select id="period-select" name="period" class="form-select">
+                        {% for value, label in period_options %}
+                            <option value="{{ value }}" {% if value == period %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">グラフ表示</button>
+                </div>
+            </form>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">価格比較</h5>
+                    {% if not selected_fish %}
+                        <p class="text-muted">魚種を選択して「グラフ表示」を押してください。</p>
+                    {% elif price_chart %}
+                        <img src="data:image/png;base64,{{ price_chart }}" class="img-fluid" alt="価格比較グラフ">
+                    {% else %}
+                        <p class="text-muted">データなし</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- タブ2：旬・おすすめカレンダー -->
+        <div class="tab-pane fade" id="calendar-pane" role="tabpanel" aria-labelledby="calendar-tab">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">旬・おすすめカレンダー</h5>
+                    <p class="text-muted small">冷凍魚は旬の判定対象外のため一覧に含まれません。</p>
+                    {% if calendar_rows %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm align-middle text-center">
+                                <thead>
+                                    <tr>
+                                        <th>魚種</th>
+                                        {% for m in month_range %}<th>{{ m }}月</th>{% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in calendar_rows %}
+                                        <tr>
+                                            <th class="text-start">{{ row.display_name }}</th>
+                                            {% for cell in row.cells %}
+                                                <td class="{% if cell.is_season %}bg-success{% endif %}"></td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">データなし</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

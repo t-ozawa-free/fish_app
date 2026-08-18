@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from .models import FishMaster, ForecastResult, MonthlyStats, RecommendScore
-from .utils import get_next_month
+from .utils import get_next_month, shift_month
 
 # グラフの日本語表示用フォント設定（Windows開発環境とそれ以外の本番環境を切り替える）
 # ※ Linux本番環境にIPAexGothicが未インストールの場合はDejaVu Sansにフォールバックし文字化けし得る
@@ -393,6 +393,126 @@ class FishDetailView(TemplateView):
 
 
 class GraphView(TemplateView):
-    """SCR004：グラフ画面（中身は今後実装、現状はタイトルのみ）"""
+    """SCR004：グラフ画面。価格比較タブと旬・おすすめカレンダータブを表示する"""
 
     template_name = "fish_web/graph.html"
+
+    # 価格比較タブの表示期間の選択肢（value, 表示ラベル）
+    PERIOD_OPTIONS = [
+        ("1year", "過去1年"),
+        ("3year", "過去3年"),
+        ("all", "全期間"),
+    ]
+    # "all"以外の期間に対応する月数（実データの最終月から遡る月数）
+    PERIOD_MONTH_COUNTS = {"1year": 12, "3year": 36}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(self._build_price_comparison_context())
+        context.update(self._build_season_calendar_context())
+        return context
+
+    # ---------- タブ1：価格比較 ----------
+
+    def _build_price_comparison_context(self):
+        """選択された魚種の価格推移を比較するグラフ用データを組み立てる"""
+        requested_names = self.request.GET.getlist("fish")
+        # 実在しない魚種名はfilterで自然に除外される
+        selected_fish = list(
+            FishMaster.objects.filter(name__in=requested_names).order_by("display_name")
+        )
+        period = self._get_period(self.request)
+
+        price_chart = None
+        if selected_fish:
+            selected_names = [fish.name for fish in selected_fish]
+            stats = list(MonthlyStats.objects.filter(fish_name__in=selected_names))
+            all_months = {(s.year, s.month) for s in stats}
+            if all_months:
+                timeline = self._build_period_timeline(all_months, period)
+                series = self._build_price_series(selected_fish, stats, timeline)
+                price_chart = self._render_price_comparison_chart(timeline, series)
+
+        return {
+            "all_fish": FishMaster.objects.all().order_by("display_name"),
+            "selected_fish": selected_fish,
+            "selected_fish_names": {fish.name for fish in selected_fish},
+            "period": period,
+            "period_options": self.PERIOD_OPTIONS,
+            "price_chart": price_chart,
+        }
+
+    def _get_period(self, request):
+        """表示期間指定をGETパラメータから取得する。不正な値は3年にフォールバックする"""
+        period = request.GET.get("period", "3year")
+        valid_periods = {key for key, _ in self.PERIOD_OPTIONS}
+        return period if period in valid_periods else "3year"
+
+    def _build_period_timeline(self, all_months, period):
+        """選択魚種の実データ範囲とperiod指定から連続した年月リストを作る
+        （date.today()は使わず実際に存在する最終データ月を基準にする）"""
+        end_year, end_month = max(all_months)
+        if period == "all":
+            start_year, start_month = min(all_months)
+        else:
+            month_count = self.PERIOD_MONTH_COUNTS[period]
+            start_year, start_month = shift_month(end_year, end_month, -(month_count - 1))
+
+        timeline = []
+        year, month = start_year, start_month
+        while (year, month) <= (end_year, end_month):
+            timeline.append((year, month))
+            year, month = get_next_month(year, month)
+        return timeline
+
+    def _build_price_series(self, selected_fish, stats, timeline):
+        """魚種ごとの(表示名, 価格リスト)のリストを作る。timelineに存在しない月はNone"""
+        price_by_fish = defaultdict(dict)
+        for s in stats:
+            price_by_fish[s.fish_name][(s.year, s.month)] = s.price
+
+        series = []
+        for fish in selected_fish:
+            values = [price_by_fish.get(fish.name, {}).get(ym) for ym in timeline]
+            series.append((fish.display_name, values))
+        return series
+
+    def _render_price_comparison_chart(self, timeline, series):
+        """魚種ごとの価格推移を重ねた折れ線グラフを描画し、Base64エンコードしたPNGを返す"""
+        x = range(len(timeline))
+        labels = [f"{year}/{month}" for year, month in timeline]
+
+        fig, ax = plt.subplots(figsize=(10, 5))
+        for display_name, values in series:
+            y = [v if v is not None else float("nan") for v in values]
+            ax.plot(x, y, marker="o", markersize=3, label=display_name)
+        ax.set_title("価格比較")
+        ax.set_ylabel("円/kg")
+        # 年月ラベルが多い場合は間引いて表示する（重なりを防ぐ）
+        step = max(len(labels) // 12, 1)
+        ax.set_xticks(list(x)[::step])
+        ax.set_xticklabels(labels[::step], rotation=45, ha="right")
+        ax.legend(loc="upper left", fontsize="small")
+        fig.tight_layout()
+
+        buffer = io.BytesIO()
+        fig.savefig(buffer, format="png")
+        plt.close(fig)  # メモリリーク防止のため必ずFigureを閉じる
+        return base64.b64encode(buffer.getvalue()).decode("ascii")
+
+    # ---------- タブ2：旬・おすすめカレンダー ----------
+
+    def _build_season_calendar_context(self):
+        """冷凍魚を除く全魚種について、月ごとの旬フラグを持つカレンダー用データを作る
+        （CLAUDE.mdの「冷凍魚は旬スコアから除外」ルールに従う）"""
+        fish_list = FishMaster.objects.filter(is_frozen=False).order_by("display_name")
+        calendar_rows = []
+        for fish in fish_list:
+            season_months = set(fish.season or [])
+            calendar_rows.append(
+                {
+                    "display_name": fish.display_name,
+                    "cells": [{"month": m, "is_season": m in season_months} for m in range(1, 13)],
+                }
+            )
+        return {"calendar_rows": calendar_rows, "month_range": range(1, 13)}

@@ -6,3 +6,9 @@ def get_next_month(year, month):
     if month == 12:
         return year + 1, 1
     return year, month + 1
+
+
+def shift_month(year, month, offset):
+    """year/monthをoffsetヶ月分シフトした年月を返す（offsetは負の値で過去方向にシフト）"""
+    index = year * 12 + (month - 1) + offset
+    return index // 12, index % 12 + 1
