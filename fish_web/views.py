@@ -515,4 +515,9 @@ class GraphView(TemplateView):
                     "cells": [{"month": m, "is_season": m in season_months} for m in range(1, 13)],
                 }
             )
-        return {"calendar_rows": calendar_rows, "month_range": range(1, 13)}
+        return {
+            "calendar_rows": calendar_rows,
+            "month_range": range(1, 13),
+            # 今月の列をテンプレート側で強調表示するために渡す
+            "today_month": date.today().month,
+        }

@@ -75,7 +75,9 @@
                                 <thead>
                                     <tr>
                                         <th>魚種</th>
-                                        {% for m in month_range %}<th>{{ m }}月</th>{% endfor %}
+                                        {% for m in month_range %}
+                                            <th class="{% if m == today_month %}bg-primary text-white{% endif %}">{{ m }}月</th>
+                                        {% endfor %}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -83,7 +85,15 @@
                                         <tr>
                                             <th class="text-start">{{ row.display_name }}</th>
                                             {% for cell in row.cells %}
-                                                <td class="{% if cell.is_season %}bg-success{% endif %}"></td>
+                                                {% if cell.month == today_month and cell.is_season %}
+                                                    <td class="bg-success border border-primary border-2"></td>
+                                                {% elif cell.is_season %}
+                                                    <td class="bg-success"></td>
+                                                {% elif cell.month == today_month %}
+                                                    <td class="bg-light"></td>
+                                                {% else %}
+                                                    <td></td>
+                                                {% endif %}
                                             {% endfor %}
                                         </tr>
                                     {% endfor %}
