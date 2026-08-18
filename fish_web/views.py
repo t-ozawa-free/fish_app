@@ -308,7 +308,11 @@ class FishDetailView(TemplateView):
                     timeline, actual_prices, forecast_prices, "月別平均単価推移", "円/kg"
                 ),
                 "volume_chart": self._render_chart(
-                    timeline, actual_volumes, forecast_volumes, "月別取扱数量推移", "kg"
+                    timeline,
+                    self._to_man_kg(actual_volumes),
+                    self._to_man_kg(forecast_volumes),
+                    "月別取扱数量推移",
+                    "万kg",
                 ),
                 "current_price": current_price,
                 "alternatives": fish.alternatives.all(),
@@ -317,6 +321,10 @@ class FishDetailView(TemplateView):
             }
         )
         return context
+
+    def _to_man_kg(self, volumes):
+        """取扱数量（kg）を万kg単位に変換する（Y軸が指数表記になるのを防ぐ）"""
+        return [v / 10000 if v is not None else None for v in volumes]
 
     def _build_timeline(self, monthly_stats, forecasts):
         """実績（MonthlyStats）と予測（ForecastResult）の年月を結合し、
