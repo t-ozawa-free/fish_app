@@ -76,7 +76,8 @@
                                     <tr>
                                         <th>魚種</th>
                                         {% for m in month_range %}
-                                            <th class="{% if m == today_month %}bg-primary text-white{% endif %}">{{ m }}月</th>
+                                            <th class="{% if m == today_month %}bg-danger text-white{% endif %}"
+                                                {% if m == today_month %}style="border-left:2px solid red;border-right:2px solid red;border-top:2px solid red;"{% endif %}>{{ m }}月</th>
                                         {% endfor %}
                                     </tr>
                                 </thead>
@@ -85,15 +86,8 @@
                                         <tr>
                                             <th class="text-start">{{ row.display_name }}</th>
                                             {% for cell in row.cells %}
-                                                {% if cell.month == today_month and cell.is_season %}
-                                                    <td class="bg-success border border-primary border-2"></td>
-                                                {% elif cell.is_season %}
-                                                    <td class="bg-success"></td>
-                                                {% elif cell.month == today_month %}
-                                                    <td class="bg-light"></td>
-                                                {% else %}
-                                                    <td></td>
-                                                {% endif %}
+                                                <td class="{% if cell.is_season %}bg-success{% endif %}"
+                                                    {% if cell.month == today_month %}style="border-left:2px solid red;border-right:2px solid red;{% if forloop.parentloop.last %}border-bottom:2px solid red;{% endif %}"{% endif %}></td>
                                             {% endfor %}
                                         </tr>
                                     {% endfor %}
